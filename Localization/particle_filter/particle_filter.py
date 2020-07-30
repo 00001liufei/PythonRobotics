@@ -44,13 +44,14 @@ def observation(x_true, xd, u, rf_id):
     # add noise to gps x-y
     z = np.zeros((0, 3))
 
+    # GPS的定位模型？？？
     for i in range(len(rf_id[:, 0])):
 
         dx = x_true[0, 0] - rf_id[i, 0]
         dy = x_true[1, 0] - rf_id[i, 1]
-        d = math.hypot(dx, dy)
+        d = math.hypot(dx, dy) # 固定点到状态点的距离
         if d <= MAX_RANGE:
-            dn = d + np.random.randn() * Q_sim[0, 0] ** 0.5  # add noise
+            dn = d + np.random.randn() * Q_sim[0, 0] ** 0.5  # add noise，距离加噪声
             zi = np.array([[dn, rf_id[i, 0], rf_id[i, 1]]])
             z = np.vstack((z, zi))
 
@@ -112,6 +113,7 @@ def pf_localization(px, pw, z, u):
         w = pw[0, ip]
 
         #  Predict with random input sampling
+        # 高斯的采样
         ud1 = u[0, 0] + np.random.randn() * R[0, 0] ** 0.5
         ud2 = u[1, 0] + np.random.randn() * R[1, 1] ** 0.5
         ud = np.array([[ud1, ud2]]).T
@@ -202,6 +204,7 @@ def main():
     time = 0.0
 
     # RF_ID positions [x, y]
+    # 4个固定点
     rf_id = np.array([[10.0, 0.0],
                       [10.0, 10.0],
                       [0.0, 15.0],

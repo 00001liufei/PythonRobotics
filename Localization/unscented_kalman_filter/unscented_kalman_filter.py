@@ -86,7 +86,7 @@ def observation_model(x):
 
 def generate_sigma_points(xEst, PEst, gamma):
     sigma = xEst
-    Psqrt = scipy.linalg.sqrtm(PEst)
+    Psqrt = scipy.linalg.sqrtm(PEst)  # LLT = E
     n = len(xEst[:, 0])
     # Positive direction
     for i in range(n):
